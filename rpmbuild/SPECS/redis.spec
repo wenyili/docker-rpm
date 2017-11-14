@@ -3,7 +3,7 @@
 %define _topdir     /root/rpmbuild 
 %define name        redis
 %define release     1.el6
-%define version     3.2.10 
+%define version     3.2.11 
 %define buildroot   %{_topdir}/%{name}-%{version}
  
 BuildRoot:  	%{buildroot}
@@ -31,23 +31,20 @@ and so on. Redis is free software released under the very liberal BSD license.
 %setup -q -n %{name}-%{version}
  
 %build
-cd src
-make
-cd ../
- 
+make MALLOC=libc
+
 %install
-mkdir -p $RPM_BUILD_ROOT/usr/local/%{name}-%{version}
-cp -rf * $RPM_BUILD_ROOT/usr/local/%{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT/usr/local/bin/
+cp src/redis-server $RPM_BUILD_ROOT/usr/local/bin/
+cp src/redis-cli $RPM_BUILD_ROOT/usr/local/bin/
+cp src/redis-trib.rb $RPM_BUILD_ROOT/usr/local/bin/
 
 %post
-ln -s /usr/local/%{name}-%{version}/src/redis-cli /usr/bin/
-ln -s /usr/local/%{name}-%{version}/src/redis-server /usr/bin/
-mkdir /data/redis_data
 
 %clean
  
 %files
-/usr/local
+/usr/local/bin
 
 %defattr(-,root,root)
  
